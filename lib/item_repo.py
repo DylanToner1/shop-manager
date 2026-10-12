@@ -6,8 +6,8 @@ class ItemRepo:
     def __init__(self, conn: DatabaseConnection):
         self._conn = conn
 
-    def all(self):
-        rows = self._conn.execute("SELECT * from items")
+    def all(self) -> list[Item]:
+        rows = self._conn.execute("SELECT * from items ORDER BY id")
         items = []
         for row in rows:
             item = Item(row["id"], row["name"], row["price"], row["stock_count"])
@@ -16,13 +16,21 @@ class ItemRepo:
 
     def get(self, id):
         rows = self._conn.execute("SELECT * from items WHERE id = %s", [id])
+        if not rows:
+            return None
         row = rows[0]
         return Item(row["id"], row["name"], row["price"], row["stock_count"])
 
     def create(self, item: Item):
         self._conn.execute(
-            "INSERT INTO items (name, price, stock_count) VALUES (%s, %s, 0)",
-            [item.name, item.price],
+            "INSERT INTO items (name, price, stock_count) VALUES (%s, %s, %s)",
+            [item.name, item.price, item.stock_count],
+        )
+
+    def update(self, item: Item):
+        self._conn.execute(
+            "UPDATE items SET name = %s, price = %s, stock_count = %s WHERE id = %s",
+            [item.name, item.price, item.stock_count, item.id],
         )
 
     def delete(self, id: int):

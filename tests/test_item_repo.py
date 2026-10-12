@@ -43,6 +43,14 @@ def test_get_single_record(db_connection):
     assert item == Item(3, "item3", Decimal("1.99"), 124)
 
 
+def test_get_single_record_doesnt_exist(db_connection):
+    db_connection.seed("seeds/items.sql")
+    repository = ItemRepo(db_connection)
+
+    item = repository.get(7)
+    assert item == None
+
+
 """
 When we call ItemRepo#create
 We get a new record in the database.
@@ -65,6 +73,26 @@ def test_create_record(db_connection):
         Item(6, "item6", Decimal("8.99"), 4),
         Item(7, "item7", Decimal("12.99"), 0),
     ]
+
+
+"""
+When we call ItemRepo#update
+We update an existing item object
+"""
+
+
+def test_update_record(db_connection):
+    db_connection.seed("seeds/items.sql")
+    repository = ItemRepo(db_connection)
+
+    item = repository.get(3)
+    assert item == Item(3, "item3", Decimal("1.99"), 124)
+
+    updated_item = Item(3, "item3new", Decimal("2.99"), 123)
+    repository.update(updated_item)
+
+    item = repository.get(3)
+    assert item == Item(3, "item3new", Decimal("2.99"), 123)
 
 
 """

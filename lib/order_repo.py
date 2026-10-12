@@ -6,7 +6,7 @@ class OrderRepo:
     def __init__(self, conn: DatabaseConnection):
         self._conn = conn
 
-    def all(self):
+    def all(self) -> list[Order]:
         rows = self._conn.execute("SELECT * from orders")
         orders = []
         for row in rows:

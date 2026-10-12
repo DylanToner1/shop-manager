@@ -4,6 +4,9 @@ class Customer:
         self.name = name
         self.email = email
 
+    def format(self):
+        return f"#{self.id}: {self.name} - {self.email}"
+
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
