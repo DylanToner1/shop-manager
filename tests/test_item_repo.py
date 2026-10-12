@@ -61,7 +61,9 @@ def test_create_record(db_connection):
     db_connection.seed("seeds/items.sql")
     repository = ItemRepo(db_connection)
 
-    repository.create(Item(None, "item7", 12.99, 0))
+    id = repository.create(Item(None, "item7", 12.99, 0))
+
+    assert id == 7
 
     result = repository.all()
     assert result == [

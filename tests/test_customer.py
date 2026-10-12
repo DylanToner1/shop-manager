@@ -14,3 +14,9 @@ def test_customer_eq():
     customer2 = Customer(id=1, name="customer", email="hello@example.com")
 
     assert customer == customer2
+
+
+def test_customer_format():
+    customer = Customer(id=1, name="customer", email="hello@example.com")
+
+    assert customer.format() == "#1: customer - hello@example.com"

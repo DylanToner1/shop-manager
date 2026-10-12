@@ -56,7 +56,11 @@ def test_create_record(db_connection):
     db_connection.seed("seeds/orders.sql")  # Seed our database with some test data
     repository = OrderRepo(db_connection)
 
-    repository.create(Order(None, 6, 2, datetime.fromisoformat("2026-10-09 15:45:00Z")))
+    id = repository.create(
+        Order(None, 6, 2, datetime.fromisoformat("2026-10-09 15:45:00Z"))
+    )
+
+    assert id == 4
 
     result = repository.all()
     assert result == [
@@ -85,3 +89,21 @@ def test_delete_record(db_connection):
         Order(1, 1, 1, datetime.fromisoformat("2026-10-09 15:30:00Z")),
         Order(2, 5, 2, datetime.fromisoformat("2026-10-09 15:35:00Z")),
     ]
+
+
+"""
+When we call OrderRepo#format_order
+We get a formatted string reflecting the seed data.
+"""
+
+
+def test_format_single_record(db_connection):
+    db_connection.seed("seeds/items.sql")
+    db_connection.seed("seeds/customers.sql")
+    db_connection.seed("seeds/orders.sql")  # Seed our database with some test data
+    repository = OrderRepo(db_connection)
+
+    formatted = repository.format_order(2)
+    assert (
+        formatted == "Order #2 - item5 for customer2, ordered on 2026-10-09 at 16:35:00"
+    )

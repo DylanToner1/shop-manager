@@ -20,10 +20,11 @@ class CustomerRepo:
         return Customer(row["id"], row["name"], row["email"])
 
     def create(self, customer: Customer):
-        self._conn.execute(
-            "INSERT INTO customers (name, email) VALUES (%s, %s)",
+        rows = self._conn.execute(
+            "INSERT INTO customers (name, email) VALUES (%s, %s) RETURNING id",
             [customer.name, customer.email],
         )
+        return int(rows[0]["id"])
 
     def delete(self, id: int):
         self._conn.execute("DELETE FROM customers WHERE id = %s", [id])

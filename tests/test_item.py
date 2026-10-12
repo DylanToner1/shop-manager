@@ -15,3 +15,9 @@ def test_item_eq():
     item2 = Item(id=1, name="item", price=3.99, stock_count=2)
 
     assert item == item2
+
+
+def test_item_format():
+    item = Item(id=1, name="item", price=3.99, stock_count=2)
+
+    assert item.format() == "#1: item - £3.99 each - 2 in stock"

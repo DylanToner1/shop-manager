@@ -49,7 +49,9 @@ def test_create_record(db_connection):
     db_connection.seed("seeds/customers.sql")
     repository = CustomerRepo(db_connection)
 
-    repository.create(Customer(None, "customer4", "customer4@example.com"))
+    id = repository.create(Customer(None, "customer4", "customer4@example.com"))
+
+    assert id == 4
 
     result = repository.all()
     assert result == [

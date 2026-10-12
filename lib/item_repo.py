@@ -22,10 +22,11 @@ class ItemRepo:
         return Item(row["id"], row["name"], row["price"], row["stock_count"])
 
     def create(self, item: Item):
-        self._conn.execute(
-            "INSERT INTO items (name, price, stock_count) VALUES (%s, %s, %s)",
+        rows = self._conn.execute(
+            "INSERT INTO items (name, price, stock_count) VALUES (%s, %s, %s) RETURNING id",
             [item.name, item.price, item.stock_count],
         )
+        return int(rows[0]["id"])
 
     def update(self, item: Item):
         self._conn.execute(
