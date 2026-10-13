@@ -1,7 +1,8 @@
-from lib.item_repo import ItemRepo
-from lib.order_repo import OrderRepo
-from lib.models.order import Order
 from datetime import datetime
+
+from lib.item_repo import ItemRepo
+from lib.models.order import Order
+from lib.order_repo import OrderRepo
 
 """
 When we call OrderRepo#all

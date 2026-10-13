@@ -1,6 +1,7 @@
+from decimal import Decimal
+
 from lib.item_repo import ItemRepo
 from lib.models.item import Item
-from decimal import Decimal
 
 """
 When we call ItemRepo#all

@@ -1,6 +1,7 @@
+import os
+
 import psycopg
 from psycopg.rows import class_row, dict_row
-import os
 
 
 class DatabaseConnection:

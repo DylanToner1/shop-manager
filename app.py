@@ -1,4 +1,4 @@
-from helpers import ask_existing, ask_price, ask_stock, ask
+from helpers import ask, ask_existing, ask_price, ask_stock
 from lib.customer_repo import CustomerRepo
 from lib.db_conn import DatabaseConnection
 from lib.item_repo import ItemRepo

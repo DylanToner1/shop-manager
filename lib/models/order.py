@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 class Order:
@@ -13,7 +13,7 @@ class Order:
         self.id = id
         self.item_id = item_id
         self.customer_id = customer_id
-        self.placed_on = placed_on or datetime.now(tz=timezone.utc)
+        self.placed_on = placed_on or datetime.now(tz=UTC)
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
