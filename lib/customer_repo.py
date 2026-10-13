@@ -16,6 +16,8 @@ class CustomerRepo:
 
     def get(self, id):
         rows = self._conn.execute("SELECT * from customers WHERE id = %s", [id])
+        if not rows:
+            return None
         row = rows[0]
         return Customer(row["id"], row["name"], row["email"])
 

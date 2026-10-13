@@ -39,6 +39,14 @@ def test_get_single_record(db_connection):
     assert customer == Customer(3, "customer3", "customer3@example.com")
 
 
+def test_get_single_record_doesnt_exist(db_connection):
+    db_connection.seed("seeds/customers.sql")
+    repository = CustomerRepo(db_connection)
+
+    customer = repository.get(12)
+    assert customer == None
+
+
 """
 When we call CustomerRepo#create
 We get a new record in the database.

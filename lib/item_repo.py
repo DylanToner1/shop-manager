@@ -6,8 +6,13 @@ class ItemRepo:
     def __init__(self, conn: DatabaseConnection):
         self._conn = conn
 
-    def all(self) -> list[Item]:
-        rows = self._conn.execute("SELECT * from items ORDER BY id")
+    def all(self, in_stock=False) -> list[Item]:
+        if in_stock:
+            rows = self._conn.execute(
+                "SELECT * from items WHERE stock_count > 0 ORDER BY id"
+            )
+        else:
+            rows = self._conn.execute("SELECT * from items  ORDER BY id")
         items = []
         for row in rows:
             item = Item(row["id"], row["name"], row["price"], row["stock_count"])

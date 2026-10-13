@@ -1,3 +1,4 @@
+from lib.item_repo import ItemRepo
 from lib.order_repo import OrderRepo
 from lib.models.order import Order
 from datetime import datetime
@@ -44,6 +45,16 @@ def test_get_single_record(db_connection):
     assert order == Order(3, 3, 3, datetime.fromisoformat("2026-10-09 15:40:00Z"))
 
 
+def test_get_single_record_doesnt_exist(db_connection):
+    db_connection.seed("seeds/items.sql")
+    db_connection.seed("seeds/customers.sql")
+    db_connection.seed("seeds/orders.sql")  # Seed our database with some test data
+    repository = OrderRepo(db_connection)
+
+    order = repository.get(8)
+    assert order == None
+
+
 """
 When we call OrderRepo#create
 We get a new record in the database.
@@ -55,6 +66,7 @@ def test_create_record(db_connection):
     db_connection.seed("seeds/customers.sql")
     db_connection.seed("seeds/orders.sql")  # Seed our database with some test data
     repository = OrderRepo(db_connection)
+    item_repo = ItemRepo(db_connection)
 
     id = repository.create(
         Order(None, 6, 2, datetime.fromisoformat("2026-10-09 15:45:00Z"))
@@ -69,6 +81,9 @@ def test_create_record(db_connection):
         Order(3, 3, 3, datetime.fromisoformat("2026-10-09 15:40:00Z")),
         Order(4, 6, 2, datetime.fromisoformat("2026-10-09 15:45:00Z")),
     ]
+
+    # assert item 6's stock level went down
+    assert item_repo.get(6).stock_count == 3
 
 
 """

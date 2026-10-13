@@ -36,10 +36,11 @@ class App:
             "Not a valid choice",
         )
 
-    def list_all_items(self):
-        print("Listing all items...")
+    def list_all_items(self, in_stock=False):
+        if not in_stock:
+            print("Listing all items...")
 
-        items = self.item_repo.all()
+        items = self.item_repo.all(in_stock)
 
         for item in items:
             print(item.format())
@@ -120,12 +121,13 @@ class App:
     def new_order(self):
         print("New order:")
 
-        self.list_all_items()
+        self.list_all_items(in_stock=True)
         print()
 
-        item = ask_existing(
-            prompt="Enter item ID to order: ",
+        item: Item = ask_existing(
+            prompt="Enter item ID to order (only shows items in stock): ",
             repo=self.item_repo,
+            valid_cond=lambda item: item.stock_count > 0,
             error="Invalid item ID",
         )
 

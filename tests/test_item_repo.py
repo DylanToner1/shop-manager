@@ -29,6 +29,24 @@ def test_get_all_records(
     ]
 
 
+def test_get_all_records_in_stock(
+    db_connection,
+):  # See conftest.py to learn what `db_connection` is.
+    db_connection.seed("seeds/items.sql")  # Seed our database with some test data
+    repository = ItemRepo(db_connection)  # Create a new ItemRepo
+
+    items = repository.all(in_stock=True)  # Get all items
+
+    # Assert on the results
+    assert items == [
+        Item(2, "item2", Decimal("6.99"), 6),
+        Item(3, "item3", Decimal("1.99"), 124),
+        Item(4, "item4", Decimal("36.99"), 32),
+        Item(5, "item5", Decimal("4.99"), 640),
+        Item(6, "item6", Decimal("8.99"), 4),
+    ]
+
+
 """
 When we call ItemRepo#find
 We get a single Item object reflecting the seed data.

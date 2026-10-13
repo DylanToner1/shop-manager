@@ -18,6 +18,8 @@ class OrderRepo:
 
     def get(self, id):
         rows = self._conn.execute("SELECT * from orders WHERE id = %s", [id])
+        if not rows:
+            return None
         row = rows[0]
         return Order(row["id"], row["item_id"], row["customer_id"], row["placed_on"])
 
@@ -26,6 +28,13 @@ class OrderRepo:
             "INSERT INTO orders (item_id, customer_id, placed_on) VALUES (%s, %s, %s) RETURNING id",
             [order.item_id, order.customer_id, order.placed_on],
         )
+
+        # decrement ordered item's stock
+        self._conn.execute(
+            "UPDATE items SET stock_count = items.stock_count - 1 WHERE id = %s",
+            [order.item_id],
+        )
+
         return int(rows[0]["id"])
 
     def delete(self, id: int):

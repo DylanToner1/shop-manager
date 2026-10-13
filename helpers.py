@@ -40,10 +40,15 @@ def ask_stock(prompt, allow_blank=False):
     return ask(prompt, int, lambda n: n >= 0, "Invalid stock level", allow_blank)
 
 
-def ask_existing(prompt, repo, error):
+def ask_existing(
+    prompt,
+    repo,
+    valid_cond=lambda resp: resp is not None,
+    error="Invalid ID",
+):
     return ask(
         prompt,
         lambda id: repo.get(int(id)),
-        lambda response: response is not None,
+        valid_cond,
         error,
     )
