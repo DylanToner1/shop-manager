@@ -118,7 +118,7 @@ def test_format_single_record(db_connection):
     db_connection.seed("seeds/orders.sql")  # Seed our database with some test data
     repository = OrderRepo(db_connection)
 
-    formatted = repository.format_order(2)
+    formatted = repository.get_summary(2).format()
     assert (
         formatted == "Order #2 - item5 for customer2, ordered on 2026-10-09 at 16:35:00"
     )

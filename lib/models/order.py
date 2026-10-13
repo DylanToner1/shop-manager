@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime, timezone
 
 
@@ -19,3 +20,15 @@ class Order:
 
     def __repr__(self):
         return f"Order({self.id}, {self.item_id}, {self.customer_id}, {self.placed_on.isoformat()})"
+
+
+@dataclass
+class OrderSummary:
+    id: int
+    placed_on: datetime
+    item_name: str
+    customer_name: str
+
+    def format(self) -> str:
+        ts = self.placed_on.strftime("%Y-%m-%d at %H:%M:%S")
+        return f"Order #{self.id} - {self.item_name} for {self.customer_name}, ordered on {ts}"

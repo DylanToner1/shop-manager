@@ -1,5 +1,5 @@
-from lib.models.item import Item
 from lib.db_conn import DatabaseConnection
+from lib.models.item import Item
 
 
 class ItemRepo:
@@ -7,26 +7,18 @@ class ItemRepo:
         self._conn = conn
 
     def all(self, in_stock=False) -> list[Item]:
+        query = "SELECT * from items ORDER BY id"
         if in_stock:
-            rows = self._conn.execute(
-                "SELECT * from items WHERE stock_count > 0 ORDER BY id"
-            )
-        else:
-            rows = self._conn.execute("SELECT * from items  ORDER BY id")
-        items = []
-        for row in rows:
-            item = Item(row["id"], row["name"], row["price"], row["stock_count"])
-            items.append(item)
-        return items
+            query = "SELECT * from items WHERE stock_count > 0 ORDER BY id"
 
-    def get(self, id):
-        rows = self._conn.execute("SELECT * from items WHERE id = %s", [id])
-        if not rows:
-            return None
-        row = rows[0]
-        return Item(row["id"], row["name"], row["price"], row["stock_count"])
+        return self._conn.execute(query, cls=Item)
 
-    def create(self, item: Item):
+    def get(self, id) -> Item | None:
+        rows = self._conn.execute("SELECT * from items WHERE id = %s", [id], cls=Item)
+
+        return rows[0] if rows else None
+
+    def create(self, item: Item) -> int:
         rows = self._conn.execute(
             "INSERT INTO items (name, price, stock_count) VALUES (%s, %s, %s) RETURNING id",
             [item.name, item.price, item.stock_count],

@@ -1,5 +1,5 @@
-from lib.models.customer import Customer
 from lib.db_conn import DatabaseConnection
+from lib.models.customer import Customer
 
 
 class CustomerRepo:
@@ -7,21 +7,15 @@ class CustomerRepo:
         self._conn = conn
 
     def all(self) -> list[Customer]:
-        rows = self._conn.execute("SELECT * from customers")
-        customers = []
-        for row in rows:
-            customer = Customer(row["id"], row["name"], row["email"])
-            customers.append(customer)
-        return customers
+        return self._conn.execute("SELECT * from customers", cls=Customer)
 
-    def get(self, id):
-        rows = self._conn.execute("SELECT * from customers WHERE id = %s", [id])
-        if not rows:
-            return None
-        row = rows[0]
-        return Customer(row["id"], row["name"], row["email"])
+    def get(self, id) -> Customer | None:
+        rows = self._conn.execute(
+            "SELECT * from customers WHERE id = %s", [id], cls=Customer
+        )
+        return rows[0] if rows else None
 
-    def create(self, customer: Customer):
+    def create(self, customer: Customer) -> int:
         rows = self._conn.execute(
             "INSERT INTO customers (name, email) VALUES (%s, %s) RETURNING id",
             [customer.name, customer.email],

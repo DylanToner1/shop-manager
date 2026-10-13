@@ -1,5 +1,5 @@
 import psycopg
-from psycopg.rows import dict_row
+from psycopg.rows import class_row, dict_row
 import os
 
 
@@ -34,9 +34,11 @@ class DatabaseConnection:
 
     # This method executes an SQL query on the database.
     # It allows you to set some parameters too. You'll learn about this later.
-    def execute(self, query, params=[]):
+    def execute(self, query, params=[], cls=None):
         self._check_connection()
-        with self.connection.cursor() as cursor:
+        row_factory = class_row(cls) if cls else dict_row
+
+        with self.connection.cursor(row_factory=row_factory) as cursor:
             cursor.execute(query, params)
             if cursor.description is not None:
                 result = cursor.fetchall()

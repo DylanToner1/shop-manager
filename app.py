@@ -116,7 +116,7 @@ class App:
         orders = self.order_repo.all()
 
         for order in orders:
-            print(self.order_repo.format_order(order.id))
+            print(self.order_repo.get_summary(order.id).format())
 
     def new_order(self):
         print("New order:")
@@ -148,7 +148,7 @@ class App:
             print("Creating order...")
 
             id = self.order_repo.create(new_order)
-            print(f"Created order: {self.order_repo.format_order(id)}")
+            print(f"Created order: {self.order_repo.get_summary(id).format()}")
 
         except Exception as e:
             print(f"failed to create order: {e}")
